@@ -1,0 +1,33 @@
+name: nldi_xstool
+channels:
+- conda-forge
+dependencies:
+ - python=3.8
+ - pip
+ - bump2version
+ - wheel
+ - watchdog
+ - flake8
+ - tox
+ - coverage
+ - Sphinx
+ - twine
+ - Click
+ - pytest
+ - pytest-runner
+ - hydrodata
+ - py3dep
+ - pygeoogc
+ - pygeoutils
+ - pynhd
+ - folium
+ - lxml
+ - matplotlib
+ - xarray
+ - dask
+ - netcdf4
+ - bottleneck
+ - jupyterlab
+ - geopandas
+ - descartes
+ - numba
