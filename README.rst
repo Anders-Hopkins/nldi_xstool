@@ -30,7 +30,8 @@ XSTool is a command line tool to extract topographic cross-sections along NHD st
 Features
 --------
 
-* TODO
+* xsatapoint:
+** example command: nldi_xstool xsatpoint --file test1.json --latlon 40.2684 -103.80119 --width 1000 --numpoints 100
 
 Credits
 -------
