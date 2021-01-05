@@ -65,7 +65,7 @@ def XSAtPoint(xstool, latlon, numpoints, width, file):
     lon = latlon[1]
     print(f'input={latlon}, lat={lat}, lon={lon}, \
     npts={numpoints}, width={width} and crs={xstool.outCRS()} and \
-    file={file}')
+    file={file} and out_epsg={xstool.outCRS()}')
     # print(tuple(latlon))
     xs = getXSAtPoint(point=tuple((lat, lon)),
                       numpoints=numpoints,

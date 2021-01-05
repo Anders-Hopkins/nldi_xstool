@@ -32,7 +32,10 @@ def getXSAtPoint(point, numpoints, width, file=None):
                         'Lat':[point[0]],
                         'Lon':[point[1]]})
     gpd_pt = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.Lon, df.Lat))
+    gpd_pt.set_crs(epsg=4326, inplace=True)
+    gpd_pt.to_crs(epsg=3857, inplace=True)
     comid = getCIDFromLatLon(point)
+    print(f'comid = {comid}')
     strm_seg = NLDI().getfeature_byid("comid", "3561878", basin=False).to_crs('epsg:3857')
     xs = XSGen(point=gpd_pt, cl_geom=strm_seg, ny=100, width=1000)
     xs_line = xs.get_xs()
