@@ -6,6 +6,8 @@ from nldi_xstool.nldi_xstool import getXSAtPoint
 import geopandas as gpd
 import pandas as pd
 import json
+from nldi_xstool.splitcatchment import SplitCatchment
+from nldi_xstool.flowtrace import Flowtrace
 
 class XSTool:
     def __init__(self):
@@ -20,8 +22,12 @@ class XSTool:
     def __repr__(self):
         return f"XSTool {self.out_crs}"
 
+#class SplitCatchmentTool:
+    
 
 pass_xstool = click.make_pass_decorator(XSTool)
+pass_splitcatchment = click.make_pass_decorator(XSTool)
+pass_flowtrace = click.make_pass_decorator(Flowtrace)
 
 
 @click.group()
@@ -38,7 +44,7 @@ def main(ctx, outcrs):
     ctx.obj.setoutCRS(outcrs)
     return 0
 
-
+###################### Cross Section Command ######################
 @main.command()
 @click.option("--file",
               required=True,
@@ -82,6 +88,60 @@ def XSAtPoint(xstool, latlon, numpoints, width, file):
     # gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.Longitude, df.Latitude))
     # return gdf.to_json()
 
+##################### Splitcatchment Command ######################## 
+
+@main.command()
+@click.option("--file",
+              required=True,
+              type=click.File('w'),
+              help='Output json file')
+@click.option("--latlon",
+             required=True,
+             type=tuple((np.float, np.float)),
+             help="format lat lon as floats for example lat lon or -103.8011 40.2684")
+@click.option("--upstream",
+              type=bool,
+              default=False)
+
+@pass_xstool
+def SplitAtPoint(splitcatchment, latlon, upstream, file):  # splitcatchment, latlon, upstream, file
+    print('execute splitcatchment')
+    lat = latlon[0] 
+    lon = latlon[1]
+    result = SplitCatchment(lon, lat, upstream, file=file)
+    print(result)
+    return result
+
+##################### Flowtrace Command ######################## 
+
+@main.command()
+@click.option("--file",
+              required=True,
+              type=click.File('w'),
+              help='Output json file')
+@click.option("--latlon",
+             required=True,
+             type=tuple((np.float, np.float)),
+             help="format lat lon as floats for example lat lon or -103.8011 40.2684")
+@click.option("--raindroptrace",
+              type=bool,
+              default=True)
+@click.option("--direction",
+              type=str,
+              default='down')
+
+@pass_xstool
+def TraceAtPoint(flowtrace, latlon, raindroptrace, direction, file):  # splitcatchment, latlon, upstream, file
+    print('execute flowtrace')
+    lat = latlon[0] 
+    lon = latlon[1]
+    result = Flowtrace(lon, lat, raindroptrace, direction, file=file)
+    print(result)
+    return result
 
 if __name__ == "__main__":
     sys.exit(main())  # pragma: no cover
+
+# else:
+#     print("Not main")
+#     sys.exit(cli())

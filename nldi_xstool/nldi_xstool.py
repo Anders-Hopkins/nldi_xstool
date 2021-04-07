@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 from shapely.geometry import Point
 import geopandas as gpd
 import pandas as pd
-import os.path as path
+#import os.path as path
 
 class HPoint(Point):
     def __init__(self, *args, **kwargs):
@@ -36,7 +36,9 @@ def getXSAtPoint(point, numpoints, width, file=None):
     gpd_pt.to_crs(epsg=3857, inplace=True)
     comid = getCIDFromLatLon(point)
     print(f'comid = {comid}')
-    strm_seg = NLDI().getfeature_byid("comid", "3561878", basin=False).to_crs('epsg:3857')
+    strm_seg = NLDI().getfeature_byid("comid", comid).to_crs('epsg:3857')  # "3561878" , basin=False
+    # strm_seg = gpd.GeoDataFrame.from_features({"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[-103.802528001368,40.2687375992537],[-103.801507800817,40.2685499936342],[-103.797674000263,40.2685364931822],[-103.795592702925,40.2677875980735]]},"properties":{"source":"comid","sourceName":"NHDPlus comid","identifier":"3561878","name":"","uri":"","comid":"3561878","navigation":"https://labs.waterdata.usgs.gov/api/nldi/linked-data/comid/3561878/navigation"}}]}, crs="EPSG:4326").to_crs('epsg:3857')
+    print('strm_seg: ', strm_seg)
     xs = XSGen(point=gpd_pt, cl_geom=strm_seg, ny=100, width=1000)
     xs_line = xs.get_xs()
     # get topo polygon with buffer to ensure there is enough topography to interpolate xs line
@@ -52,6 +54,7 @@ def getXSAtPoint(point, numpoints, width, file=None):
     gpdsi.set_crs(epsg=3857, inplace=True)
     gpdsi.to_crs(epsg=4326, inplace=True)
     if(file):
+        print("Output file: ", type(file), file)
         if not isinstance(file, str):
         # with open(file, "w") as f:
             file.write(gpdsi.to_json())
